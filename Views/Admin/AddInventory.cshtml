@@ -1,0 +1,13 @@
+@model InventoryManagementSystem.Inventory.Domain.Product
+
+<h2>Add New Product</h2>
+
+<form asp-action="AddInventory" method="post">
+    <label>Name</label>
+    <input asp-for="Name" /><br />
+    <label>SKU</label>
+    <input asp-for="Sku" /><br />
+    <label>Quantity</label>
+    <input asp-for="Quantity" /><br />
+    <button type="submit">Add</button>
+</form>
