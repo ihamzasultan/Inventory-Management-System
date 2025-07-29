@@ -1,13 +1,32 @@
 @model InventoryManagementSystem.Inventory.Domain.Product
+@{
+    ViewData["Title"] = "Add Inventory";
+    Layout = "_Layout";
+}
+@await Html.PartialAsync("_AdminSidebar")
 
-<h2>Add New Product</h2>
-
-<form asp-action="AddInventory" method="post">
-    <label>Name</label>
-    <input asp-for="Name" /><br />
-    <label>SKU</label>
-    <input asp-for="Sku" /><br />
-    <label>Quantity</label>
-    <input asp-for="Quantity" /><br />
-    <button type="submit">Add</button>
-</form>
+<div class="main-content p-4" style="margin-left: 220px; background-color: #f8f9fa; min-height: 100vh;">
+    <div class="card shadow-sm border-0 p-4 rounded-4" style="max-width: 500px;">
+        <h4 class="mb-4 text-dark">Add New Product</h4>
+        <form asp-action="AddInventory" method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label text-muted">Product Name</label>
+                <input asp-for="Name" class="form-control rounded-3 shadow-sm" placeholder="Enter product name" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Sku" class="form-label text-muted">SKU</label>
+                <input asp-for="Sku" class="form-control rounded-3 shadow-sm" placeholder="Enter SKU" />
+                <span asp-validation-for="Sku" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Quantity" class="form-label text-muted">Quantity</label>
+                <input asp-for="Quantity" class="form-control rounded-3 shadow-sm" placeholder="Enter quantity" />
+                <span asp-validation-for="Quantity" class="text-danger small"></span>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark rounded-3">Add Product</button>
+            </div>
+        </form>
+    </div>
+</div>

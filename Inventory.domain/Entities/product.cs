@@ -9,7 +9,7 @@ namespace InventoryManagementSystem.Inventory.Domain
         [Required]
         public required string Name { get; set; }
 
-        public string? Sku { get; set; }
+        public required string Sku { get; set; }
 
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;

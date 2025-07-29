@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using InventoryManagementSystem.Inventory.Domain;
 using Microsoft.EntityFrameworkCore;
 using InventoryManagementSystem.Models;
+using System.Security.Claims;
 
 namespace InventoryManagementSystem.Inventory.infrastructure
 {
@@ -26,7 +27,7 @@ namespace InventoryManagementSystem.Inventory.infrastructure
             return await _userManager.Users.ToListAsync();
         }
 
- 
+
         public async Task<ApplicationUser?> UpdateUserAsync(ApplicationUser user)
         {
             var existingUser = await _userManager.FindByIdAsync(user.Id);
@@ -84,5 +85,22 @@ namespace InventoryManagementSystem.Inventory.infrastructure
 
             return result;
         }
+
+       public async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        }
+
+        
+        public string GetCurrentUserId(ClaimsPrincipal user)
+        {
+            return _userManager.GetUserId(user);
+        }
+
+
     }
 }

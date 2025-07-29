@@ -1,2 +1,10 @@
 <h2>Welcome Salesperson</h2>
 <p>You can create stock out entries here.</p>
+@{
+    Layout = "_Layout";
+}
+@await Html.PartialAsync("_SalesSidebar")
+
+<div class="main-content">
+    <h2>Welcome Salesperson</h2>
+</div>

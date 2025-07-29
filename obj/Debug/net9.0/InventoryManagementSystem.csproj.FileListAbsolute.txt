@@ -231,3 +231,4 @@ C:\Users\rajah\Documents\Inventory Management System\InventoryManagementSystem\o
 C:\Users\rajah\Documents\Inventory Management System\InventoryManagementSystem\obj\Debug\net9.0\InventoryManagementSystem.pdb
 C:\Users\rajah\Documents\Inventory Management System\InventoryManagementSystem\obj\Debug\net9.0\InventoryManagementSystem.genruntimeconfig.cache
 C:\Users\rajah\Documents\Inventory Management System\InventoryManagementSystem\obj\Debug\net9.0\ref\InventoryManagementSystem.dll
+C:\Users\rajah\Documents\Inventory Management System\InventoryManagementSystem\obj\Debug\net9.0\InventoryManagementSystem.sourcelink.json

@@ -14,11 +14,22 @@ public class AdminController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Dashboard()
+    public async Task<IActionResult> Dashboard(string searchTerm)
     {
-        // Fetch data for the admin dashboard
-        var items = await _context.Products.ToListAsync();
-        return View(items); // /Views/Admin/Index.cshtml
+         var productsQuery = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchTerm = searchTerm.ToLower();
+
+            productsQuery = productsQuery.Where(p =>
+                p.Name.ToLower().Contains(searchTerm) ||
+                (p.Sku != null && p.Sku.ToLower().Contains(searchTerm)));
+        }
+
+        var products = await productsQuery.ToListAsync();
+        ViewBag.SearchTerm = searchTerm; // To retain value in input field
+        return View(products);
     }
 
     public IActionResult AddInventory()
@@ -30,14 +41,30 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddInventory(Product product)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(product);
+
+        // Try to find an existing product by Name (or you can use SKU if it's unique)
+        var existingProduct = await _context.Products
+            .FirstOrDefaultAsync(p => p.Sku.ToLower() == product.Sku.ToLower());
+
+        if (existingProduct != null)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Dashboard));
+            // Product exists, just update quantity
+            existingProduct.Quantity += product.Quantity;
+            _context.Products.Update(existingProduct);
         }
-        return View(product); // /Views/Admin/AddInventory.cshtml
+        else
+        {
+            // New product, insert as new
+            product.CreatedAt = DateTime.Now;
+            _context.Products.Add(product);
+        }
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Dashboard));
     }
+
 
     public async Task<IActionResult> EditInventory(int id)
     {

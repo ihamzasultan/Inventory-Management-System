@@ -59,6 +59,47 @@ namespace InventoryManagementSystem.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            Console.WriteLine("Model posted");
+
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("ModelState is invalid");
+                return View(model);
+            }
+
+            var userId = _userService.GetCurrentUserId(User);
+            Console.WriteLine("User ID: " + userId);
+
+            var result = await _userService.ChangePasswordAsync(userId, model.CurrentPassword, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                Console.WriteLine("Password changed successfully");
+                TempData["SuccessMessage"] = "Password updated successfully!";
+                await _userService.LogoutAsync();
+                return RedirectToAction("Login", "Account");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine("Error: " + error.Description);
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(model);
+        }
+
+
+
         public async Task<IActionResult> Logout()
         {
             await _userService.LogoutAsync();

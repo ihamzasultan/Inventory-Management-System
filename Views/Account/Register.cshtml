@@ -1,22 +1,30 @@
 @model InventoryManagementSystem.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
 
-<h2>Register</h2>
-
-<form asp-action="Register" method="post">
-    <div>
-        <label>Full Name</label>
-        <input asp-for="FullName" />
-        <span asp-validation-for="FullName"></span>
+<div class="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card shadow-sm border-0 p-4 rounded-4" style="max-width: 450px; width: 100%;">
+        <h3 class="text-center mb-4 text-dark">Create Account</h3>
+        <form asp-action="Register" method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label text-muted">Full Name</label>
+                <input asp-for="FullName" class="form-control rounded-3 shadow-sm" placeholder="Enter your full name" />
+                <span asp-validation-for="FullName" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label text-muted">Email</label>
+                <input asp-for="Email" class="form-control rounded-3 shadow-sm" placeholder="Enter your email" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label text-muted">Password</label>
+                <input asp-for="Password" type="password" class="form-control rounded-3 shadow-sm" placeholder="Create a password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark rounded-3">Register</button>
+            </div>
+        </form>
     </div>
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button type="submit">Register</button>
-</form>
+</div>

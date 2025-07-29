@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using InventoryManagementSystem.Inventory.Domain;
 using InventoryManagementSystem.Models;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,8 @@ namespace InventoryManagementSystem.Inventory.infrastructure
 
         Task LogoutAsync();
         Task<IdentityResult> RegisterAsync(RegisterViewModel model);
-
+        Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        string GetCurrentUserId(ClaimsPrincipal user);
 
     }
 }
