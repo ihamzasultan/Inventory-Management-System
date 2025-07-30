@@ -1,5 +1,6 @@
 using InventoryManagementSystem.Inventory.Domain;
 using InventoryManagementSystem.Inventory.infrastructure;
+using InventoryManagementSystem.Inventory.infrastructure.Services;
 using InventoryManagementSystem.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IApplicationUsersService, ApplicationUsersService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 
 
 var app = builder.Build();
+
 
 using (var scope = app.Services.CreateScope())
 {
