@@ -8,7 +8,7 @@ namespace InventoryManagementSystem.Inventory.Domain
 
         [Required]
         public required string Name { get; set; }
-
+        [Required]
         public required string Sku { get; set; }
 
         public int Quantity { get; set; }

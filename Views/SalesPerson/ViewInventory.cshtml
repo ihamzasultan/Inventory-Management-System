@@ -1,0 +1,27 @@
+@model List<InventoryManagementSystem.Inventory.Domain.Product>
+
+@{
+    ViewData["Title"] = "View Inventory";
+    Layout = "_Layout";
+}
+@await Html.PartialAsync("_SalesSidebar")
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Sku</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Sku</td>
+                <td>@product.Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
