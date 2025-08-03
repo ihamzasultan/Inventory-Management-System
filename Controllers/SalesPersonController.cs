@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Security.Claims;
 using InventoryManagementSystem.Inventory.Domain;
 using InventoryManagementSystem.Inventory.infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +20,7 @@ public class SalesPersonController : Controller
         _logger = logger;
     }
 
-    public IActionResult Dashboard()
+    public IActionResult StockOut()
     {
         return View();
     }
@@ -61,5 +63,46 @@ public class SalesPersonController : Controller
     {
         var stockRecords = await _saleService.ViewStockRecordsAsync(string.Empty);
         return View(stockRecords);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> StockOut(StockOut stockOut)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            ModelState.AddModelError(string.Empty, "Unable to determine current user.");
+            return View(stockOut);
+        }
+        stockOut.SalespersonId = userId;
+        _logger.LogInformation($"Processing stock out for product: {stockOut.Product?.Sku}");
+        _logger.LogInformation($"Processing stock out for UserId: {stockOut.SalespersonId}");
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _logger.LogInformation("Processing stock out for product: {ProductSku}", stockOut.Product?.Sku);
+                var result = await _saleService.AddStockOutAsync(stockOut);
+                if (result is OkResult)
+                {
+                    return RedirectToAction("ViewInventory");
+                }
+                ModelState.AddModelError(string.Empty, "Failed to process stock out.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing stock out.");
+                ModelState.AddModelError(string.Empty, "An error occurred while processing stock out.");
+            }
+
+        }
+        else
+        {
+            _logger.LogError("Model state is invalid for processing stock out.");
+        }
+      
+        return View(stockOut);
+        
     }
 }

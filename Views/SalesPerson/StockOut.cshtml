@@ -1,0 +1,32 @@
+@model InventoryManagementSystem.Inventory.Domain.StockOut
+@{
+    Layout = "_Layout";
+}
+@await Html.PartialAsync("_SalesSidebar")
+
+<div class="main-content">
+    <h2>Welcome Salesperson</h2>
+    <form method="post" asp-action="StockOut" asp-controller="SalesPerson">
+        <div class="form-group">
+            <label for="Product_Name">Product Name</label>
+            <input type="text" class="form-control" id="Product_Name" name="Product.Name" required>
+        </div>
+        <div class="form-group">
+            <label for="Product_Sku">Product Sku</label>
+            <input type="text" class="form-control" id="Product_Sku" name="Product.Sku" required>
+        </div>
+        <div class="form-group">
+            <label for="Quantity">Quantity</label>
+            <input type="number" class="form-control" id="Quantity" name="Quantity" required>
+        </div>
+        <div class="form-group">
+            <label for="Client">Client</label>
+            <input type="text" class="form-control" id="Client" name="Client" required>
+        </div>
+        <div class="form-group">
+            <label for="HandOverTo">Hand Over To</label>
+            <input type="text" class="form-control" id="HandOverTo" name="HandOverTo" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Dispatch</button>
+    </form>
+</div>

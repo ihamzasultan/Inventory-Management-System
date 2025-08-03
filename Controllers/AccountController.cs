@@ -30,7 +30,7 @@ namespace InventoryManagementSystem.Controllers
                     return RedirectToAction("Dashboard", "Admin");
 
                 if (roles.Contains("Salesperson"))
-                    return RedirectToAction("Dashboard", "SalesPerson");
+                    return RedirectToAction("StockOut", "SalesPerson");
 
                 return RedirectToAction("Index", "Home"); // fallback
             }

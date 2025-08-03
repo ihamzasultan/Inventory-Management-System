@@ -10,11 +10,13 @@ namespace InventoryManagementSystem.Inventory.infrastructure.Services
         private readonly ILogger<SalesServices> _logger;
         private readonly IInventoryService _inventoryService;
 
+
         public SalesServices(AppDbContext context, ILogger<SalesServices> logger, IInventoryService inventoryService)
         {
             _context = context;
             _logger = logger;
             _inventoryService = inventoryService;
+        
         }
 
         public async Task<ActionResult> AddStockAsync(StockIn stockIn)
@@ -58,6 +60,43 @@ namespace InventoryManagementSystem.Inventory.infrastructure.Services
             }
 
             return new OkResult();
+        }
+
+        public Task<ActionResult> AddStockOutAsync(StockOut stockOut)
+        {
+            try
+            {
+                var existingProduct = _context.Products.FirstOrDefault(p => p.Sku.ToLower() == stockOut.Product.Sku.ToLower());
+                if (existingProduct == null)
+                {
+                    _logger.LogWarning("Product with SKU {ProductSku} not found for stock out.", stockOut.Product.Sku);
+                    return Task.FromResult<ActionResult>(new NotFoundObjectResult("Product not found."));
+                }
+                else if (existingProduct.Quantity < stockOut.Quantity)
+                {
+                    _logger.LogWarning("Insufficient stock for product {ProductSku}. Available: {AvailableQuantity}, Requested: {RequestedQuantity}",
+                        stockOut.Product.Sku, existingProduct.Quantity, stockOut.Quantity);
+                    return Task.FromResult<ActionResult>(new BadRequestObjectResult("Insufficient stock available."));
+                }
+                else
+                {
+                    existingProduct.Quantity -= stockOut.Quantity;
+                    stockOut.ProductId = existingProduct.Id;
+                    stockOut.Product = null;
+                    _context.StockOuts.Add(stockOut);
+                    _context.Products.Update(existingProduct);
+                    _context.SaveChanges();
+                    _logger.LogInformation("Stock out processed for product: {ProductSku}, Quantity: {Quantity}", stockOut.Product.Sku, stockOut.Quantity);
+                    return Task.FromResult<ActionResult>(new OkResult());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing stock out for product: {ProductSku}", stockOut.Product?.Sku);
+                return Task.FromResult<ActionResult>(new BadRequestObjectResult("An error occurred while processing stock out."));
+            }
+
         }
 
         public Task<ActionResult> ReturnItemAsync(ReturnItem returnItem)

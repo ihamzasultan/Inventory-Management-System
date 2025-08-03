@@ -7,6 +7,7 @@ namespace InventoryManagementSystem.Inventory.infrastructure.Services
     {
         // Define methods related to sales operations
         Task<ActionResult> AddStockAsync(StockIn stockIn);
+        Task<ActionResult> AddStockOutAsync(StockOut stockOut);
         Task<ActionResult> ViewSalesRecordsAsync(string searchTerm);
         Task<IEnumerable<StockIn>> ViewStockRecordsAsync(string searchTerm);
         Task<ActionResult> ReturnItemAsync(ReturnItem returnItem);
