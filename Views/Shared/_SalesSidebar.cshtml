@@ -1,13 +1,32 @@
-<div class="sidebar bg-light p-3">
+@{
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+}
+
+<div class="sidebar bg-white border-end position-fixed h-100 p-3 shadow-sm" style="width: 200px;">
     <ul class="nav flex-column">
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="StockOut">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ViewInventory">View Inventory</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="AddStock">Add Stock</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ViewStockRecord">View Stock Record</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ViewSalesRecords=">View Sales Record</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ReturnItem">Return Item</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ViewAllReturns">View All Returns</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="ChangePassword">Change Password</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Salesperson" asp-action="Logout">Logout</a></li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "StockOut" ? "active" : "")" asp-controller="Salesperson" asp-action="StockOut">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "ViewInventory" ? "active" : "")" asp-controller="Salesperson" asp-action="ViewInventory">View Inventory</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "AddStock" ? "active" : "")" asp-controller="Salesperson" asp-action="AddStock">Add Stock</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "ViewStockRecord" ? "active" : "")" asp-controller="Salesperson" asp-action="ViewStockRecord">View Stock Record</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "ViewSalesRecord" ? "active" : "")" asp-controller="Salesperson" asp-action="ViewSalesRecord">View Sales Record</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentAction == "ViewAllReturns" ? "active" : "")" asp-controller="Salesperson" asp-action="ViewAllReturns">View All Returns</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+        </li>
     </ul>
 </div>

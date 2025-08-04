@@ -6,11 +6,12 @@ namespace InventoryManagementSystem.Inventory.infrastructure.Services
     public interface ISalesServices
     {
         // Define methods related to sales operations
+        Task<StockOut> GetStockOutByIdAsync(int id);
         Task<ActionResult> AddStockAsync(StockIn stockIn);
         Task<ActionResult> AddStockOutAsync(StockOut stockOut);
-        Task<ActionResult> ViewSalesRecordsAsync(string searchTerm);
+        Task<IEnumerable<StockOut>> ViewSalesRecordsAsync(string searchTerm);
         Task<IEnumerable<StockIn>> ViewStockRecordsAsync(string searchTerm);
         Task<ActionResult> ReturnItemAsync(ReturnItem returnItem);
-        Task<ActionResult> ViewAllReturnsAsync(string searchTerm);
+        Task<IEnumerable<ReturnItem>> ViewAllReturnsAsync(string searchTerm);
     }
 }

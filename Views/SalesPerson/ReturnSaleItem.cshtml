@@ -1,0 +1,30 @@
+@model InventoryManagementSystem.Inventory.Domain.ReturnItem
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Return Sale Item";
+}
+@await Html.PartialAsync("_SalesSidebar")
+
+<div class="main-content p-4" style="margin-left: 220px; background-color: #f8f9fa; min-height: 100vh;">
+    <div class="card shadow-sm border-0 p-4 rounded-4" style="max-width: 500px;">
+        <h4 class="mb-4 text-dark">Return Sale Item</h4>
+
+        <form method="post" asp-action="ReturnSaleItem" asp-controller="SalesPerson" novalidate>
+            <input type="hidden" asp-for="StockOutId" />
+
+            <div class="mb-3">
+                <label for="ReturnedQuantity" class="form-label text-muted">Returned Quantity</label>
+                <input type="number" class="form-control rounded-3 shadow-sm" id="ReturnedQuantity" name="ReturnedQuantity" placeholder="Enter quantity" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Remarks" class="form-label text-muted">Remarks</label>
+                <textarea class="form-control rounded-3 shadow-sm" id="Remarks" name="Remarks" rows="3" placeholder="Optional remarks"></textarea>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark rounded-3">Submit Return</button>
+            </div>
+        </form>
+    </div>
+</div>

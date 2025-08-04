@@ -59,9 +59,9 @@ public class SalesPersonController : Controller
         return View(stockIn);
     }
     [HttpGet]
-    public async Task<IActionResult> ViewStockRecord()
+    public async Task<IActionResult> ViewStockRecord(string searchTerm)
     {
-        var stockRecords = await _saleService.ViewStockRecordsAsync(string.Empty);
+        var stockRecords = await _saleService.ViewStockRecordsAsync(searchTerm);
         return View(stockRecords);
     }
 
@@ -101,8 +101,74 @@ public class SalesPersonController : Controller
         {
             _logger.LogError("Model state is invalid for processing stock out.");
         }
-      
+
         return View(stockOut);
-        
+
     }
+
+    [HttpGet]
+    public async Task<IActionResult> ViewSalesRecord(string searchTerm)
+    {
+        var salesRecords = await _saleService.ViewSalesRecordsAsync(searchTerm);
+        return View(salesRecords);
+    }
+
+    public async Task<IActionResult> ReturnSaleItem(int id)
+    {
+        var stockOut = await _saleService.GetStockOutByIdAsync(id);
+        if (stockOut == null)
+        {
+            return NotFound();
+        }
+
+        var returnItem = new ReturnItem
+        {
+            StockOutId = stockOut.Id,
+            DeliveredQuantity = stockOut.Quantity,
+            StockOut = stockOut
+        };
+        _logger.LogInformation("Returning sale item for StockOutId: {StockOutId}", returnItem.StockOutId);
+        _logger.LogInformation("REturn ID before pressing return: " + returnItem.Id);
+        return View(returnItem);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ReturnSaleItem(ReturnItem returnItem)
+    {
+
+        try
+        {
+            Console.WriteLine("Returning Item Name: " + returnItem.StockOut?.Product?.Name);
+            Console.WriteLine("Returning Item Quantity: " + returnItem.ReturnedQuantity);
+            Console.WriteLine("Returning Item ID: " + returnItem.Id);
+
+            _logger.LogInformation("Returning sale item for StockOutId: {StockOutId}", returnItem.StockOutId);
+            var result = await _saleService.ReturnItemAsync(returnItem);
+            if (result is OkResult)
+            {
+                TempData["SuccessMessage"] = "Item returned successfully!";
+                return RedirectToAction("ViewSalesRecord");
+            }
+            else
+            {
+                _logger.LogError("Failed to return sale item for StockOutId: {StockOutId}", returnItem.StockOutId);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error returning sale item for StockOutId: {StockOutId}", returnItem.StockOutId);
+        }
+        return View(returnItem);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ViewAllReturns(string searchTerm)
+    {
+        var returnItems = await _saleService.ViewAllReturnsAsync(searchTerm);
+        return View(returnItems);
+    }
+       
+        
 }
+
+

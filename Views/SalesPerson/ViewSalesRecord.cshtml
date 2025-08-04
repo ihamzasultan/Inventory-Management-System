@@ -1,0 +1,53 @@
+@model IEnumerable<InventoryManagementSystem.Inventory.Domain.StockOut>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "View Sales Record";
+}
+
+@await Html.PartialAsync("_SalesSidebar")
+
+<div class="main-content p-4" style="margin-left: 220px; background-color: #f8f9fa; min-height: 100vh;">
+    <h4 class="mb-4 text-dark">View Sales Record</h4>
+
+    <div class="mb-4">
+        <form asp-action="ViewSalesRecord" method="get" class="d-flex gap-2">
+            <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control shadow-sm" placeholder="Search by Name or SKU" />
+            <button type="submit" class="btn btn-dark rounded-3">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+    <table class="table table-hover table-bordered bg-white rounded-3 shadow-sm">
+        <thead class="table-light">
+                <tr>
+                    <th>Product Name</th>
+                    <th>SKU</th>
+                    <th>Quantity</th>
+                    <th>Client</th>
+                    <th>Hand Over To</th>
+                    <th>Date</th>
+                    <th>Handover By</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr>
+                        <td>@record.Product?.Name</td>
+                        <td>@record.Product?.Sku</td>
+                        <td>@record.Quantity</td>
+                        <td>@record.Client</td>
+                        <td>@record.HandOverTo</td>
+                        <td>@record.Date.ToString("g")</td>
+                        <td>@record.Salesperson?.FullName</td>
+                        <td>
+                            <a asp-action="ReturnSaleItem" asp-route-id="@record.Id" class="btn btn-sm btn-outline-info rounded-3">Return</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

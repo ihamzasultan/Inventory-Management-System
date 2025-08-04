@@ -6,25 +6,34 @@
 }
 @await Html.PartialAsync("_SalesSidebar")
 
-<div class="main-content">
-    <h2>Add Stock</h2>
-    <form method="post" asp-action="AddStock" asp-controller="SalesPerson">
-        <div class="form-group">
-            <label for="Product_Name">Product Name</label>
-            <input type="text" class="form-control" id="Product_Name" name="Product.Name" required>
-        </div>
-        <div class="form-group">
-            <label for="Product_Sku">SKU</label>
-            <input type="text" class="form-control" id="Product_Sku" name="Product.Sku" required>
-        </div>
-        <div class="form-group">
-            <label for="Quantity">Quantity</label>
-            <input type="number" class="form-control" id="Quantity" name="Quantity" required>
-        </div>
-        <div class="form-group">
-            <label for="Remarks">Remarks</label>
-            <input type="text" class="form-control" id="Remarks" name="Remarks">
-        </div>
-        <button type="submit" class="btn btn-primary">Add Product</button>
-    </form>
+<div class="main-content p-4" style="margin-left: 220px; background-color: #f8f9fa; min-height: 100vh;">
+    <div class="card shadow-sm border-0 p-4 rounded-4" style="max-width: 500px;">
+        <h4 class="mb-4 text-dark">Add Stock</h4>
+
+        <form method="post" asp-action="AddStock" asp-controller="SalesPerson" novalidate>
+            <div class="mb-3">
+                <label for="Product_Name" class="form-label text-muted">Product Name</label>
+                <input type="text" class="form-control rounded-3 shadow-sm" id="Product_Name" name="Product.Name" placeholder="Enter product name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Product_Sku" class="form-label text-muted">SKU</label>
+                <input type="text" class="form-control rounded-3 shadow-sm" id="Product_Sku" name="Product.Sku" placeholder="Enter SKU" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Quantity" class="form-label text-muted">Quantity</label>
+                <input type="number" class="form-control rounded-3 shadow-sm" id="Quantity" name="Quantity" placeholder="Enter quantity" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Remarks" class="form-label text-muted">Remarks</label>
+                <input type="text" class="form-control rounded-3 shadow-sm" id="Remarks" name="Remarks" placeholder="Optional remarks">
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark rounded-3">Add Product</button>
+            </div>
+        </form>
+    </div>
 </div>

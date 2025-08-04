@@ -6,22 +6,35 @@
 }
 @await Html.PartialAsync("_SalesSidebar")
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Sku</th>
-            <th>Quantity</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Sku</td>
-                <td>@product.Quantity</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="main-content p-4" style="margin-left: 220px; background-color: #f8f9fa; min-height: 100vh;">
+    <h4 class="mb-4 text-dark">View Inventory</h4>
+
+        <div class="mb-4">
+        <form asp-action="ViewInventory" method="get" class="d-flex gap-2">
+            <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control shadow-sm" placeholder="Search by Product Name or SKU" />
+            <button type="submit" class="btn btn-dark rounded-3">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+    <table class="table table-hover table-bordered bg-white rounded-3 shadow-sm">
+        <thead class="table-light">
+                <tr>
+                    <th>Product Name</th>
+                    <th>SKU</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Sku</td>
+                        <td>@product.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

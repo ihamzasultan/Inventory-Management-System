@@ -15,12 +15,15 @@ namespace InventoryManagementSystem.Inventory.infrastructure
         public DbSet<StockOut> StockOuts { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+        public DbSet<ReturnItem> ReturnItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().ToTable("Products");
             modelBuilder.Entity<StockIn>().ToTable("StockIns");
             modelBuilder.Entity<StockOut>().ToTable("StockOuts");
             modelBuilder.Entity<ApplicationUser>().ToTable("ApplicationUsers");
+            modelBuilder.Entity<ReturnItem>().ToTable("ReturnItems");
 
             base.OnModelCreating(modelBuilder);
             // Additional configurations can be added here

@@ -99,19 +99,91 @@ namespace InventoryManagementSystem.Inventory.infrastructure.Services
 
         }
 
-        public Task<ActionResult> ReturnItemAsync(ReturnItem returnItem)
+        public async Task<StockOut> GetStockOutByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var stockOut = await _context.StockOuts.FindAsync(id);
+            if (stockOut == null)
+            {
+                return null;
+            }
+            return stockOut;
         }
 
-        public Task<ActionResult> ViewAllReturnsAsync(string searchTerm)
+
+        public async Task<ActionResult> ReturnItemAsync(ReturnItem returnItem)
         {
-            throw new NotImplementedException();
+            var stockOut = await _context.StockOuts.FindAsync(returnItem.StockOutId);
+            Console.WriteLine($"StockOutId: {returnItem.StockOutId}, StockOut: {stockOut?.Product?.Name}");
+            
+            if (stockOut == null)
+            {
+                return new NotFoundObjectResult("Stock out record not found");
+            }
+            
+            if (returnItem.ReturnedQuantity > stockOut.Quantity)
+            {
+                return new BadRequestObjectResult("Returned quantity exceeds sold quantity");
+            }
+
+            // Create a new ReturnItem instance to avoid EF tracking issues
+            var newReturnItem = new ReturnItem
+            {
+                StockOutId = returnItem.StockOutId,
+                ReturnedQuantity = returnItem.ReturnedQuantity,
+                Remarks = returnItem.Remarks ?? string.Empty,
+                DeliveredQuantity = stockOut.Quantity,
+                ReturnedAt = DateTime.Now
+            };
+
+            // Update stock quantity
+            stockOut.Quantity -= returnItem.ReturnedQuantity;
+            _context.StockOuts.Update(stockOut);
+
+            // Update the product quantity
+            var product = await _context.Products.FindAsync(stockOut.ProductId);
+            product.Quantity += returnItem.ReturnedQuantity;
+            _context.Products.Update(product);
+
+            // Add the new return item
+            _context.ReturnItems.Add(newReturnItem);
+
+            await _context.SaveChangesAsync(); // Use async version
+
+            Console.WriteLine($"New ReturnItem ID: {newReturnItem.Id}");
+            
+            return new OkResult();
         }
 
-        public Task<ActionResult> ViewSalesRecordsAsync(string searchTerm)
+        public async Task<IEnumerable<ReturnItem>> ViewAllReturnsAsync(string searchTerm)
         {
-            throw new NotImplementedException();
+            var returnsQuery = _context.ReturnItems
+                                            .Include(r => r.StockOut)
+                                            .ThenInclude(s => s.Product)
+                                            .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                returnsQuery = returnsQuery.Where(r => r.StockOut.Product.Name.Contains(searchTerm) || r.StockOut.Product.Sku.Contains(searchTerm) || r.Remarks.Contains(searchTerm)
+                                                    || r.StockOut.Client.Contains(searchTerm) || r.StockOut.HandOverTo.Contains(searchTerm));
+            }
+
+            return await returnsQuery.ToListAsync();
+        }
+
+        public async Task<IEnumerable<StockOut>> ViewSalesRecordsAsync(string searchTerm)
+        {
+            var salesQuery = _context.StockOuts.
+                                            Include(s => s.Product)
+                                            .Include(s => s.Salesperson)
+                                            .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                salesQuery = salesQuery.Where(s => s.Product.Name.Contains(searchTerm) || s.Product.Sku.Contains(searchTerm) || s.Client.Contains(searchTerm));
+            }
+
+            var salesRecords = await salesQuery.ToListAsync();
+            return salesRecords;
         }
 
         public async Task<IEnumerable<StockIn>> ViewStockRecordsAsync(string searchTerm)
